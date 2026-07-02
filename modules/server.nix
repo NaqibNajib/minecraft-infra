@@ -7,7 +7,9 @@
   services.minecraft-servers = {
     enable = true;
     eula = true;
-    dataDir = "/var/lib/minecraft";
+
+    #dataDir = "/var/lib/minecraft";
+    dataDir = "/srv/minecraft";
 
     servers = {
       CreateAero = {
