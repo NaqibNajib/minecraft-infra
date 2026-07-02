@@ -92,7 +92,13 @@ launcher layout, use the following workflows:
    instruct your main system rebuild command to temporarily override the 
    tracked input with your local directory:
 
+   $ cd ~/src/nixos-config
    $ nixos-rebuild switch --flake .#yourHost --override-input mc-project path:/home/youruser/src/minecraft-infra
+
+   or
+
+   $ cd ~/src/nixos-config
+   $ nh os test . -- --override-input mc-project path:/home/pouruser/src/minecraft-infra
 
    CRITICAL SAFETY NOTE: Nix flakes will completely ignore files that are not
    tracked by Git. If you create a new file or script within this repository,
