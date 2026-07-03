@@ -1,9 +1,6 @@
-===============================================================================
-                       MINECRAFT INFRASTRUCTURE FLAKE
-===============================================================================
+# MINECRAFT INFRASTRUCTURE FLAKE
 
-INTRODUCTION
-------------
+## INTRODUCTION
 
 This repository manages a unified, declarative configuration for both a
 Minecraft server instance and a customized Prism Launcher client setup using
@@ -19,8 +16,7 @@ The project exports two primary modules:
 2. A Home Manager Module for installing a custom-built Prism Launcher client.
 
 
-PREREQUISITES
--------------
+## PREREQUISITES
 
 Before you begin, ensure your target hosts have the following enabled:
 
@@ -29,44 +25,51 @@ Before you begin, ensure your target hosts have the following enabled:
 * direnv (highly recommended for local development)
 
 
-GETTING STARTED / INSTALLATION
-------------------------------
+## GETTING STARTED / INSTALLATION
 
 1. Clone the Repository
 
    To start hacking or deploying, clone this repository onto your machine:
 
+```bash
    $ git clone https://github.com/your-username/minecraft-infra.git ~/src/minecraft-infra
    $ cd ~/src/minecraft-infra
+```
 
 2. Initialize the Development Shell
 
    If you have direnv installed, run:
 
+```bash
    $ direnv allow
+````
  
    Otherwise, manually drop into the shell using:
 
+```bash
    $ nix develop
+```
 
    This automatically loads all required tooling (like 'packwiz' and 'git')
    without installing them globally on your system.
 
 
-HOW TO USE AND INTEGRATE IN YOUR CONFIGURATIONS
------------------------------------------------
+## HOW TO USE AND INTEGRATE IN YOUR CONFIGURATIONS
 
 This project is built to be consumed as a Flake input inside your main system
 or home configuration repositories.
 
-A. Integrating the Server (NixOS)
+### A. Integrating the Server (NixOS)
 
    In your main NixOS system flake.nix, add this repository as an input:
 
+```nix
    inputs.mc-project.url = "github:your-username/minecraft-infra";
+```
 
    Then, add the module to your nixosSystem modules list:
 
+```nix
    outputs = { self, nixpkgs, mc-project, ... }: {
      nixosConfigurations.your-server-hostname = nixpkgs.lib.nixosSystem {
        modules = [
@@ -75,12 +78,14 @@ A. Integrating the Server (NixOS)
        ];
      };
    };
+```
 
-B. Integrating the Client (Home Manager)
+### B. Integrating the Client (Home Manager)
 
    Similarly, add the input to your desktop/user flake and pass it to your
    Home Manager configuration profile:
 
+```nix
    outputs = { self, nixpkgs, home-manager, mc-project, ... }: {
      homeConfigurations."youruser" = home-manager.lib.homeManagerConfiguration {
        pkgs = nixpkgs.legacyPackages.x86_64-linux;
@@ -90,10 +95,9 @@ B. Integrating the Client (Home Manager)
        ];
      };
    };
+```
 
-
-DAY-TO-DAY WORKFLOW & LOCAL TESTING
------------------------------------
+## DAY-TO-DAY WORKFLOW & LOCAL TESTING
 
 When you are modifying server configs, adding mods, or updating the client
 launcher layout, use the following workflows:
@@ -104,13 +108,17 @@ launcher layout, use the following workflows:
    instruct your main system rebuild command to temporarily override the
    tracked input with your local directory:
 
+```bash
    $ cd ~/src/nixos-config
    $ nixos-rebuild switch --flake .#yourHost --override-input mc-project path:/home/youruser/src/minecraft-infra
+```
 
    or
 
+```bash
    $ cd ~/src/nixos-config
    $ nh os test . -- --override-input mc-project path:/home/pouruser/src/minecraft-infra
+```
 
    CRITICAL SAFETY NOTE: Nix flakes will completely ignore files that are not
    tracked by Git. If you create a new file or script within this repository,
@@ -120,10 +128,12 @@ launcher layout, use the following workflows:
 
    Once you verify that your changes evaluate cleanly:
 
+```bash
    $ cd ~/src/minecraft-infra
    $ git add .
    $ git commit -m "feat: upgrade server performance variables"
    $ git push origin main
+```
 
 3. Syncing the Production Hosts
 
@@ -131,24 +141,28 @@ launcher layout, use the following workflows:
    machines, navigate to your respective system configuration directory and
    update the lockfile tracking references:
 
+```bash
    $ cd ~/src/nixos-config
    $ nix flake update mc-project
    $ nixos-rebuild switch --flake .
+```
 
 
-CONTRIBUTING & REQUESTING MERGES
---------------------------------
+## CONTRIBUTING & REQUESTING MERGES
 
-If you are working in a team environment or using a branch-based workflow:
+Using a branch-based workflow:
 
 1. Create a descriptive feature branch:
 
+```bash
    $ git checkout -b feature/optimize-jvm-flags
+```
 
 2. Make your alterations, stage them, and push the branch up to your personal fork:
 
+```bash
    $ git push origin feature/optimize-jvm-flags
+```
 
 3. Open your browser, navigate to the public GitHub repository page, and click
    "Compare & pull request" to submit your merge request for evaluation.
-===============================================================================
