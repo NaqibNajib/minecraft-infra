@@ -23,7 +23,7 @@
           gamemode = "survival";
         };
 
-	# Example packwiz modpack integration
+        # Example packwiz modpack integration
         # modpack = pkgs.fetchPackwizModpack {
         #   url = "https://github.com/YourUsername/Modpack/raw/main/pack.toml";
         #   packHash = "sha256-...........................................=";
